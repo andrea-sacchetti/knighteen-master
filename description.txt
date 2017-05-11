@@ -1,0 +1,5 @@
+Move the numbers like chess knights across the board to combine them into higher numbers. Earn more points with multiple combos and aim at reaching the number 19 or higher.
+
+Move the numbers like chess knights and combine them into higher numbers. Can you reach 19?
+
+game,puzzle,knight,chess,number

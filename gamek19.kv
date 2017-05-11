@@ -1,0 +1,331 @@
+#:kivy 1.7.2
+#:import rgb kivy.utils.get_color_from_hex
+
+<BoxButton@BoxLayout>:
+	source: ''
+	orientation: 'vertical'
+	padding: '8dp'
+	canvas.before:
+		Color:
+			rgb: 0xbb / 255., 0xad / 255., 0xa0 / 255.
+		BorderImage:
+			pos: self.pos
+			size: self.size
+			source: 'data/round.png'
+	Image:
+		source: root.source
+
+<TextButton@Button>:
+	color: 1, 1, 1, 1
+	background_color: 0xbb / 255., 0xad / 255., 0xa0 / 255., 1.
+	background_normal: 'data/round.png'
+	background_down: 'data/round.png'
+	size_hint_y: None
+	height: '48dp'
+	font_size: '20dp'
+	bold: True
+
+<Number>:
+	canvas.before:
+		PushMatrix
+		Translate:
+			xy: self.center_x, self.center_y
+		Scale:
+			xyz: root.scale, root.scale, 0
+		Translate:
+			xy: -self.center_x, -self.center_y
+	canvas.after:
+		PopMatrix
+			
+	canvas:
+		Color:
+#			rgb: self.colors.get(self.number, self.colors.get(2))
+			rgb: self.get_colors(self.number, 1)
+		BorderImage:
+			pos: self.pos
+			size: self.size
+			source: 'data/round.png'
+
+	Label:
+		text: str(root.number)
+		font_size: min(self.height, self.width) / 2.5
+#		color: rgb('#f9f6f2') if root.number >= 8 else rgb('#776e65')
+		color: (1, 1, 1, 1)
+		bold: True
+		size: root.size
+		center: root.center
+
+BoxLayout:
+	padding: '10dp'
+	spacing: '10dp'
+	orientation: 'vertical' if self.height > self.width else 'horizontal'
+	canvas:
+		Color:
+			rgb: 0xfa / 255., 0xf8 / 255., 0xef / 255.
+		Rectangle:
+			pos: self.pos
+			size: self.size
+
+	BoxLayout:
+		orientation: 'vertical' if root.height > root.width else 'horizontal'
+		size_hint_y: .25 if root.height > root.width else 1
+
+		BoxLayout:
+			spacing: '10dp'
+			padding: '5dp'
+			orientation: 'vertical' if root.height < root.width else 'horizontal'
+
+            BoxLayout:
+                spacing: '2dp'
+                padding: '0dp'
+                orientation: 'vertical'
+                size_hint: (0.18, 1.)
+
+#                Button:
+                TextButton:
+                    id: reset_button
+                    size_hint: (1., 0.25)
+#                    source: 'data/reset.png'
+                    text: 'X' # u'\u27F3'
+                    on_press: game.ask_restart()
+
+                TextButton:
+                    id: help_button
+                    size_hint: (1., 0.25)
+                    text: '?'
+                    on_press: game.help()
+
+                TextButton:
+                    id: hint_button
+                    size_hint: (1., 0.25)
+                    text: '!'
+                    on_press: game.hint()
+
+                TextButton:
+                    id: undo_button
+                    size_hint: (1., 0.25)
+                    text: '<='
+                    on_press: game.undo()
+
+			Label:
+				text: "Max: " + str(game.max_num)
+				font_size: min(self.height, self.width) / 4.
+				color: 0x77 / 255., 0x6e / 255., 0x65 / 255., 1.
+				bold: True
+
+			BoxLayout:
+				orientation: 'vertical'
+				spacing: '10dp'
+
+				BoxLayout:
+					orientation: 'vertical'
+					canvas.before:
+						Color:
+							rgb: 0xbb / 255., 0xad / 255., 0xa0 / 255.
+						BorderImage:
+							pos: self.pos
+							size: self.size
+							source: 'data/round.png'
+
+					Label:
+						text: 'SCORE'
+						color: 0xee / 255., 0xe4 / 255., 0xda / 255., 1.
+						font_size: self.height / 1.5
+						size_hint_y: .5
+						bold: True
+					Label:
+						text: str(game.score)
+						font_size: self.height / 1.5
+						bold: True
+
+	AnchorLayout:
+		id: anchor
+
+		GameK19:
+#            canvas.after:
+#                Color:
+#                    rgba: 0., 1., 0., 0.5
+#                Line:
+#                    points: game.arrow_positions(self.pos, self.size)
+#                    cap: 'square'
+#                    joint: 'round'
+#                    close: True
+#                    width: 10
+
+			id: game
+			size_hint: None, None
+			size: [min(anchor.width, anchor.height)] * 2
+			on_size: self.reposition()
+			on_pos: self.reposition()
+#		FloatLayout:
+##		    size_hint: 1., 1.
+#            RotatedImage:
+#                source: 'data/arrow.png'
+#                pos_hint: {'top': 0.75, 'right': 7./8.}
+##                size_hint: game.arrow_bottom_right()[0] - game.arrow_up_left()[0], game.arrow_bottom_right()[1] - game.arrow_up_left()[1]
+#                size_hint: 2./8., 1./8.
+#    #		    allow_stretch: True
+#    #		    keep_ratio: True
+#                angle: -26.57
+
+#		GridLayout:
+#		    cols: 3
+#		    rows: 3
+#		    Widget:
+#		        size_hint: game.arrow_up_left()
+#		    Widget:
+#		        size_hint: game.arrow_bottom_right()[0] - game.arrow_up_left()[0], game.arrow_up_left()[1]
+#		    Widget:
+#		        size_hint: 1. - game.arrow_bottom_right()[0], game.arrow_up_left()[1]
+#		    Widget:
+#		        size_hint: game.arrow_up_left()[0], game.arrow_bottom_right()[1] - game.arrow_up_left()[1]
+#            RotatedImage:
+#                source: 'data/arrow.png'
+#    #		    pos: game.arrow_position()
+#    #		    size: game.arrow_size(), game.arrow_size()
+#                center: 100, 150
+#                size_hint: game.arrow_bottom_right()[0] - game.arrow_up_left()[0], game.arrow_bottom_right()[1] - game.arrow_up_left()[1]
+#    #		    allow_stretch: True
+#    #		    keep_ratio: True
+#                angle: game.arrow_angle()
+#		    Widget:
+#		        size_hint: 1. - game.arrow_bottom_right()[0], game.arrow_bottom_right()[1] - game.arrow_up_left()[1]
+#		    Widget:
+#		        size_hint: game.arrow_up_left()[0], 1. - game.arrow_bottom_right()[1]
+#		    Widget:
+#		        size_hint: game.arrow_bottom_right()[0] - game.arrow_up_left()[0], 1. - game.arrow_bottom_right()[1]
+#		    Widget:
+#		        size_hint: 1. - game.arrow_bottom_right()[0], 1. - game.arrow_bottom_right()[1]
+
+<RotatedImage>:
+    canvas.before:
+        PushMatrix
+#		Translate:
+#			xy: self.center_x, self.center_y
+##		Scale:
+##			xyz: root.scale, root.scale, 0
+#		Translate:
+#			xy: -self.center_x, -self.center_y
+        Rotate:
+            angle: root.angle
+            axis: 0, 0, 1
+            origin: self.x, self.center_y
+    canvas.after:
+        PopMatrix
+
+<GameK19>:
+	AnchorLayout:
+		id: end
+		pos: root.pos
+		size: root.size
+		opacity: 0
+
+		canvas:
+			Color:
+				rgba: 0xfa / 255., 0xf8 / 255., 0xef / 255., self.opacity - 0.2
+			BorderImage:
+				pos: self.pos
+				size: self.size
+				source: 'data/round.png'
+
+		BoxLayout:
+
+			orientation: 'vertical'
+			padding: '10dp'
+			spacing: '20dp'
+
+			Label:
+				id: end_label
+				font_size: min(self.height, self.width) / 3.
+				color: 0x77 / 255., 0x6e / 255., 0x65 / 255., 1.
+				bold: True
+				text: 'Game\nover!'
+				halign: 'center'
+
+			TextButton:
+				text: 'Restart'
+				on_press: root.restart() if end.opacity == 1. else None
+				font_size: '20dp'
+
+	AnchorLayout:
+		id: yesno
+		pos: root.pos
+		size: root.size
+		opacity: 0
+
+		canvas:
+			Color:
+				rgba: 0xfa / 255., 0xf8 / 255., 0xef / 255., self.opacity - 0.2
+			BorderImage:
+				pos: self.pos
+				size: self.size
+				source: 'data/round.png'
+
+		BoxLayout:
+
+			orientation: 'vertical'
+			padding: '10dp'
+			spacing: '20dp'
+
+			Label:
+				id: yesno_label
+				font_size: min(self.height, self.width) / 3.
+				color: 0x77 / 255., 0x6e / 255., 0x65 / 255., 1.
+				bold: True
+				text: 'Restart?'
+				halign: 'center'
+
+			TextButton:
+				text: 'Yes'
+				on_press: root.restart() if yesno.opacity == 1. else None
+				font_size: '20dp'
+
+			TextButton:
+				text: 'No'
+				on_press: root.no_restart() if yesno.opacity == 1. else None
+				font_size: '20dp'
+
+## still using 1.7.2 for android, and i want the title color
+## ModalView widget
+#<-Popup>:
+#    _container: container
+#    canvas:
+#        Color:
+#            rgba: root.background_color[:3] + [root.background_color[-1] * self._anim_alpha]
+#        Rectangle:
+#            size: self._window.size if self._window else (0, 0)
+#
+#        Color:
+#            rgb: 1, 1, 1
+#        BorderImage:
+#            source: root.background
+#            border: root.border
+#            pos: self.pos
+#            size: self.size
+#    GridLayout:
+#        padding: 12
+#        cols: 1
+#        size_hint: None, None
+#        pos: root.pos
+#        size: root.size
+#
+#        Label:
+#            text: root.title
+#			color: 0x77 / 255., 0x6e / 255., 0x65 / 255., 1.
+#            size_hint_y: None
+#            height: self.texture_size[1] + 16
+#            text_size: self.width - 16, None
+#            font_size: root.title_size
+#
+#        Widget:
+#            size_hint_y: None
+#            height: 8
+#            canvas:
+#                Color:
+#                    rgba: root.separator_color
+#                Rectangle:
+#                    pos: self.x, self.y + root.separator_height / 2.
+#                    size: self.width, root.separator_height
+#
+#        BoxLayout:
+#            id: container
